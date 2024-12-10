@@ -75,7 +75,7 @@ async def download_video_audio(update: Update, context: ContextTypes.DEFAULT_TYP
 
 
 def main():
-    application = ApplicationBuilder().token("7817453270:AAGIcqj9yREE4A3xaVVPYmShb45eiyf6HXk").build()
+    application = ApplicationBuilder().token("7900585023:AAHKTO0RqRtjWacyYgZZaitKnR8doTBge-o").build()
 
     application.add_handler(CommandHandler("start", start))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, download_video_audio))
