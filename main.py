@@ -58,8 +58,6 @@ async def download_video_audio(update: Update, context: ContextTypes.DEFAULT_TYP
             os.remove(video_filename)
         if os.path.exists(audio_filename):
             os.remove(audio_filename)
-
-        # Foydalanuvchi uchun muvaffaqiyatli xabar
         await update.message.reply_text("Video va audio muvaffaqiyatli jo'natildi!")
 
     except Exception as e:
