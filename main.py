@@ -36,8 +36,7 @@ async def download_video_audio(update: Update, context: ContextTypes.DEFAULT_TYP
             'preferredcodec': 'mp3',     # MP3 formatga aylantirish
             'preferredquality': '192',   # Sifat darajasi
         }],
-        'ffmpeg_location': 'C:/Users/user/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-7.1-full_build/bin/ffmpeg.exe'
-    }
+        }
 
     try:
         # Videoni yuklab olish
