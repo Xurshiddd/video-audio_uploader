@@ -36,6 +36,7 @@ async def download_video_audio(update: Update, context: ContextTypes.DEFAULT_TYP
             'preferredcodec': 'mp3',     # MP3 formatga aylantirish
             'preferredquality': '192',   # Sifat darajasi
         }],
+        'ffmpeg_location': '/app/.heroku/python/bin/ffmpeg',  
         }
 
     try:
