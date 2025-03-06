@@ -36,8 +36,7 @@ async def download_video_audio(update: Update, context: ContextTypes.DEFAULT_TYP
             'preferredcodec': 'mp3',     # MP3 formatga aylantirish
             'preferredquality': '192',   # Sifat darajasi
         }],
-        'ffmpeg_location': '/app/.heroku/python/bin/ffmpeg',  
-        }
+    }
 
     try:
         # Videoni yuklab olish
@@ -70,7 +69,6 @@ async def download_video_audio(update: Update, context: ContextTypes.DEFAULT_TYP
             os.remove(video_filename)
         if os.path.exists(audio_filename):
             os.remove(audio_filename)
-
 
 def main():
     application = ApplicationBuilder().token("7900585023:AAHKTO0RqRtjWacyYgZZaitKnR8doTBge-o").build()
