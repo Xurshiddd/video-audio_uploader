@@ -24,21 +24,22 @@ async def download_video_audio(update: Update, context: ContextTypes.DEFAULT_TYP
     await update.message.reply_text('Video va audio yuklanmoqda...')
 
         video_opts = {
-        'format': 'best',
-        'outtmpl': os.path.join(DOWNLOADS_DIR, '%(title)s.%(ext)s'),
-        'cookies': 'cookies.txt',  # Cookies faylini qo'shish
-    }
+    'format': 'best',
+    'outtmpl': os.path.join(DOWNLOADS_DIR, '%(title)s.%(ext)s'),
+    'ffmpeg_location': '/usr/bin/ffmpeg',  # Railway uchun FFmpeg yo‘li
+}
 
-    audio_opts = {
-        'format': 'bestaudio/best',
-        'outtmpl': os.path.join(DOWNLOADS_DIR, '%(title)s.%(ext)s'),
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': '192',
-        }],
-        'cookies': 'cookies.txt',  # Cookies faylini qo'shish
-    }
+audio_opts = {
+    'format': 'bestaudio/best',
+    'outtmpl': os.path.join(DOWNLOADS_DIR, '%(title)s.%(ext)s'),
+    'postprocessors': [{
+        'key': 'FFmpegExtractAudio',
+        'preferredcodec': 'mp3',
+        'preferredquality': '192',
+    }],
+    'ffmpeg_location': '/usr/bin/ffmpeg',  # Railway uchun FFmpeg yo‘li
+}
+
 
 
     try:
