@@ -23,20 +23,23 @@ async def download_video_audio(update: Update, context: ContextTypes.DEFAULT_TYP
     url = update.message.text
     await update.message.reply_text('Video va audio yuklanmoqda...')
 
-    video_opts = {
-        'format': 'best',  # Eng yaxshi video format
-        'outtmpl': os.path.join(DOWNLOADS_DIR, '%(title)s.%(ext)s'),  # To'g'ri yo'lni ajratish
+        video_opts = {
+        'format': 'best',
+        'outtmpl': os.path.join(DOWNLOADS_DIR, '%(title)s.%(ext)s'),
+        'cookies': 'cookies.txt',  # Cookies faylini qo'shish
     }
 
     audio_opts = {
-        'format': 'bestaudio/best',  # Eng yaxshi audio format
+        'format': 'bestaudio/best',
         'outtmpl': os.path.join(DOWNLOADS_DIR, '%(title)s.%(ext)s'),
         'postprocessors': [{
-            'key': 'FFmpegExtractAudio',  # Audio chiqarib olish
-            'preferredcodec': 'mp3',     # MP3 formatga aylantirish
-            'preferredquality': '192',   # Sifat darajasi
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
         }],
+        'cookies': 'cookies.txt',  # Cookies faylini qo'shish
     }
+
 
     try:
         # Videoni yuklab olish
