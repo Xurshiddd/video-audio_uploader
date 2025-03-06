@@ -23,24 +23,21 @@ async def download_video_audio(update: Update, context: ContextTypes.DEFAULT_TYP
     url = update.message.text
     await update.message.reply_text('Video va audio yuklanmoqda...')
 
-        video_opts = {
-    'format': 'best',
-    'outtmpl': os.path.join(DOWNLOADS_DIR, '%(title)s.%(ext)s'),
-    'ffmpeg_location': '/usr/bin/ffmpeg',  # Railway uchun FFmpeg yo‘li
-}
+    video_opts = {
+        'format': 'best',  # Eng yaxshi video format
+        'outtmpl': os.path.join(DOWNLOADS_DIR, '%(title)s.%(ext)s'),  # To'g'ri yo'lni ajratish
+    }
 
-audio_opts = {
-    'format': 'bestaudio/best',
-    'outtmpl': os.path.join(DOWNLOADS_DIR, '%(title)s.%(ext)s'),
-    'postprocessors': [{
-        'key': 'FFmpegExtractAudio',
-        'preferredcodec': 'mp3',
-        'preferredquality': '192',
-    }],
-    'ffmpeg_location': '/usr/bin/ffmpeg',  # Railway uchun FFmpeg yo‘li
-}
-
-
+    audio_opts = {
+        'format': 'bestaudio/best',  # Eng yaxshi audio format
+        'outtmpl': os.path.join(DOWNLOADS_DIR, '%(title)s.%(ext)s'),
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',  # Audio chiqarib olish
+            'preferredcodec': 'mp3',     # MP3 formatga aylantirish
+            'preferredquality': '192',   # Sifat darajasi
+        }],
+        'ffmpeg_location': '/usr/bin/ffmpeg',  # ffmpeg joylashgan yo'l
+    }
 
     try:
         # Videoni yuklab olish
@@ -73,6 +70,7 @@ audio_opts = {
             os.remove(video_filename)
         if os.path.exists(audio_filename):
             os.remove(audio_filename)
+
 
 def main():
     application = ApplicationBuilder().token("7900585023:AAHKTO0RqRtjWacyYgZZaitKnR8doTBge-o").build()
