@@ -16,27 +16,24 @@ def sanitize_filename(filename):
     # Fayl nomidagi noaniq belgilarni olib tashlash
     return re.sub(r'[\\/*?:"<>|]', "", filename)
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text('Salom! Linkni yuboring, men video yoki audio chiqarib olaman.')
-
 async def download_video_audio(update: Update, context: ContextTypes.DEFAULT_TYPE):
     url = update.message.text
     await update.message.reply_text('Video va audio yuklanmoqda...')
 
     video_opts = {
-        'format': 'best',  # Eng yaxshi video format
-        'outtmpl': os.path.join(DOWNLOADS_DIR, '%(title)s.%(ext)s'),  # To'g'ri yo'lni ajratish
+        'format': 'best',
+        'outtmpl': os.path.join(DOWNLOADS_DIR, sanitize_filename('%(title)s.%(ext)s')),
     }
 
     audio_opts = {
-        'format': 'bestaudio/best',  # Eng yaxshi audio format
-        'outtmpl': os.path.join(DOWNLOADS_DIR, '%(title)s.%(ext)s'),
+        'format': 'bestaudio/best',
+        'outtmpl': os.path.join(DOWNLOADS_DIR, sanitize_filename('%(title)s.%(ext)s')),
         'postprocessors': [{
-            'key': 'FFmpegExtractAudio',  # Audio chiqarib olish
-            'preferredcodec': 'mp3',     # MP3 formatga aylantirish
-            'preferredquality': '192',   # Sifat darajasi
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
         }],
-        'ffmpeg_location': '/usr/bin/ffmpeg',  # ffmpeg joylashgan yo'l
+        'ffmpeg_location': '/usr/bin/ffmpeg',
     }
 
     try:
@@ -48,24 +45,17 @@ async def download_video_audio(update: Update, context: ContextTypes.DEFAULT_TYP
         # Audioni yuklab olish
         with yt_dlp.YoutubeDL(audio_opts) as ydl:
             audio_info = ydl.extract_info(url, download=True)
-            audio_filename = os.path.join(DOWNLOADS_DIR, f"{audio_info['title']}.mp3")
+            audio_filename = os.path.join(DOWNLOADS_DIR, f"{sanitize_filename(audio_info['title'])}.mp3")
 
         # Fayllarni yuborish
         await update.message.reply_video(video=open(video_filename, 'rb'))
         await update.message.reply_audio(audio=open(audio_filename, 'rb'))
 
-        # Yuklangan fayllarni o'chirish
-        if os.path.exists(video_filename):
-            os.remove(video_filename)
-        if os.path.exists(audio_filename):
-            os.remove(audio_filename)
-        await update.message.reply_text("Video va audio muvaffaqiyatli jo'natildi!")
-
     except Exception as e:
         await update.message.reply_text(f"Xatolik yuz berdi: {str(e)}")
 
     finally:
-        # Fayllar o'chirilganidan keyin
+        # Fayllarni o'chirish
         if os.path.exists(video_filename):
             os.remove(video_filename)
         if os.path.exists(audio_filename):
