@@ -16,6 +16,9 @@ def sanitize_filename(filename):
     # Fayl nomidagi noaniq belgilarni olib tashlash
     return re.sub(r'[\\/*?:"<>|]', "", filename)
 
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text('Salom! Men video va audio yuklovchi botman. Linkni yuboring.')
+
 async def download_video_audio(update: Update, context: ContextTypes.DEFAULT_TYPE):
     url = update.message.text
     await update.message.reply_text('Video va audio yuklanmoqda...')
@@ -33,8 +36,11 @@ async def download_video_audio(update: Update, context: ContextTypes.DEFAULT_TYP
             'preferredcodec': 'mp3',
             'preferredquality': '192',
         }],
-        'ffmpeg_location': '/usr/bin/ffmpeg',
+        'ffmpeg_location': '/usr/bin/ffmpeg',  # ffmpeg joylashgan yo'l
     }
+
+    video_filename = None
+    audio_filename = None
 
     try:
         # Videoni yuklab olish
@@ -56,9 +62,9 @@ async def download_video_audio(update: Update, context: ContextTypes.DEFAULT_TYP
 
     finally:
         # Fayllarni o'chirish
-        if os.path.exists(video_filename):
+        if video_filename and os.path.exists(video_filename):
             os.remove(video_filename)
-        if os.path.exists(audio_filename):
+        if audio_filename and os.path.exists(audio_filename):
             os.remove(audio_filename)
 
 
