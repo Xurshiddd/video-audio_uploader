@@ -1,15 +1,13 @@
-# Python 3.9 asosiy image
-FROM python:3.9-slim
+# Python image-dan foydalanamiz
+FROM python:3.11
 
-# ffmpeg ni o'rnatish
+# FFMPEG va kerakli kutubxonalarni o'rnatamiz
 RUN apt-get update && apt-get install -y ffmpeg
 
-# Dastur kodini nusxalash
-COPY . /app
+# Loyihani ichiga nusxalash va kutubxonalarni o'rnatish
 WORKDIR /app
+COPY . .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Kerakli kutubxonalarni o'rnatish
-RUN pip install -r requirements.txt
-
-# Dasturni ishga tushirish
+# Botni ishga tushirish
 CMD ["python", "main.py"]
