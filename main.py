@@ -5,6 +5,7 @@ from telegram.ext import (
 import yt_dlp
 import os
 import re
+from io import BytesIO
 
 DOWNLOADS_DIR = 'downloads'  # Yuklamalar uchun papka (vaqtinchalik fayllar uchun)
 
@@ -14,7 +15,9 @@ if not os.path.exists(DOWNLOADS_DIR):
 
 def sanitize_filename(filename):
     # Fayl nomidagi noaniq belgilarni olib tashlash
-    return re.sub(r'[\\/*?:"<>|]', "", filename)
+    filename = re.sub(r'[\\/*?:"<>|]', "", filename)  # Noqonuniy belgilarni olib tashlash
+    filename = filename.replace(" ", "_")  # Bo'sh joylarni pastki chiziq bilan almashtirish
+    return filename
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # /start buyrug'iga javob
@@ -54,8 +57,9 @@ async def download_video_audio(update: Update, context: ContextTypes.DEFAULT_TYP
             audio_filename = os.path.join(DOWNLOADS_DIR, f"{sanitize_filename(audio_info['title'])}.mp3")
 
         # Fayllarni to'g'ridan-to'g'ri yuborish
-        await update.message.reply_video(video=open(video_filename, 'rb'))
-        await update.message.reply_audio(audio=open(audio_filename, 'rb'))
+        with open(video_filename, 'rb') as video_file, open(audio_filename, 'rb') as audio_file:
+            await update.message.reply_video(video=video_file)
+            await update.message.reply_audio(audio=audio_file)
 
     except Exception as e:
         await update.message.reply_text(f"Xatolik yuz berdi: {str(e)}")
