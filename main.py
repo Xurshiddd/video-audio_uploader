@@ -2,45 +2,39 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 import yt_dlp
 
-COOKIES_FILE = "youtube.com_cookies.txt"  # Cookie faylini botga yuklang
+COOKIES_FILE = "youtube.com_cookies.txt"  # Cookie fayli
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text('Salom! YouTube linkni yuboring, men uni video yoki audio sifatida jo‘nataman.')
+
+async def get_best_format(info):
+    """Eng yaxshi formatni olish uchun yordamchi funksiya"""
+    formats = info.get('formats', [])
+    for f in formats:
+        if f.get('acodec') != 'none' and f.get('vcodec') != 'none':  # Video + audio
+            return f['url']
+    return None  # Hech narsa topilmasa
 
 async def download_and_send(update: Update, context: ContextTypes.DEFAULT_TYPE):
     url = update.message.text
     await update.message.reply_text('🔄 Video yoki audio topilmoqda...')
 
-    ydl_opts_video = {
-        'format': 'best',
+    ydl_opts = {
         'quiet': True,
         'noplaylist': True,
-        'cookies': COOKIES_FILE,  # Cookies dan foydalanish
-    }
-
-    ydl_opts_audio = {
-        'format': 'bestaudio/best',
-        'quiet': True,
-        'noplaylist': True,
-        'cookies': COOKIES_FILE,  # Cookies dan foydalanish
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': '192',
-        }],
+        'cookies': COOKIES_FILE,  # Cookies bilan autentifikatsiya
     }
 
     try:
-        with yt_dlp.YoutubeDL(ydl_opts_video) as ydl:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
-            video_url = info['url']
+            video_url = await get_best_format(info)  # Eng yaxshi formatni olish
 
-        with yt_dlp.YoutubeDL(ydl_opts_audio) as ydl:
-            info = ydl.extract_info(url, download=False)
-            audio_url = info['url']
+            if not video_url:
+                await update.message.reply_text("⚠️ Video topilmadi yoki format mavjud emas!")
+                return
 
         await update.message.reply_video(video=video_url, caption="🎥 Siz so‘ragan video")
-        await update.message.reply_audio(audio=audio_url, caption="🎵 Siz so‘ragan audio")
 
     except Exception as e:
         await update.message.reply_text(f"Xatolik yuz berdi: {str(e)}")
