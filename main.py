@@ -29,7 +29,7 @@ async def download_video_audio(update: Update, context: ContextTypes.DEFAULT_TYP
             }],
             'ffmpeg_location': '/usr/bin/ffmpeg',
         }
-
+    
         try:
             # Videoni yuklab olish
             with yt_dlp.YoutubeDL(video_opts) as ydl:
