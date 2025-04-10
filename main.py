@@ -23,10 +23,10 @@ async def download_video_audio(update: Update, context: ContextTypes.DEFAULT_TYP
 
     with tempfile.TemporaryDirectory() as temp_dir:
         video_opts = {
-            'format': 'bv+ba/best',
-            'merge_output_format': 'mp4',
+            'format': 'best',
             'outtmpl': os.path.join(temp_dir, 'video.%(ext)s'),
         }
+
 
 
         try:
