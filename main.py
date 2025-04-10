@@ -23,9 +23,11 @@ async def download_video_audio(update: Update, context: ContextTypes.DEFAULT_TYP
 
     with tempfile.TemporaryDirectory() as temp_dir:
         video_opts = {
-            'format': 'best[ext=mp4]/best',
+            'format': 'bv+ba/best',
+            'merge_output_format': 'mp4',
             'outtmpl': os.path.join(temp_dir, 'video.%(ext)s'),
         }
+
 
         try:
             with yt_dlp.YoutubeDL(video_opts) as ydl:
